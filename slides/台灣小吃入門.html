@@ -1,0 +1,342 @@
+<!doctype html>
+<html lang="zh-Hant-TW">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>台灣小吃入門</title>
+<style>
+:root{
+  --bg:#fbf6ee; --card:#ffffff; --ink:#2b2118; --muted:#7a6a5a; --line:#eadfcf;
+  --accent:#c2410c; --accent-soft:#fde7d6; --gold:#b7791f; --green:#3f7d4e; --blue:#2f5f8a;
+  --shadow:0 10px 30px rgba(80,50,20,.10);
+}
+@media (prefers-color-scheme: dark){
+  :root{ --bg:#1c1712; --card:#27201a; --ink:#f3e9dc; --muted:#b9a894; --line:#3a3027;
+    --accent:#fb923c; --accent-soft:#3b2616; --gold:#e3b25a; --green:#7cc28d; --blue:#8bb8e3;
+    --shadow:0 10px 30px rgba(0,0,0,.35); }
+}
+*{box-sizing:border-box}
+html,body{margin:0;height:100%;background:var(--bg);color:var(--ink);
+  font-family:"Noto Sans TC","PingFang TC","Microsoft JhengHei","Heiti TC",system-ui,sans-serif;}
+.deck{position:relative;height:100%;overflow:hidden}
+.slide{position:absolute;inset:0;display:none;padding:clamp(20px,4vw,56px) clamp(16px,6vw,96px) 84px;
+  overflow-y:auto;animation:fade .35s ease}
+.slide.active{display:flex;flex-direction:column}
+@keyframes fade{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}
+h1{font-size:clamp(34px,6vw,68px);margin:.1em 0 .2em;letter-spacing:.02em}
+h2{font-size:clamp(26px,3.6vw,42px);margin:0 0 .5em;display:flex;align-items:center;gap:.4em}
+h3{font-size:clamp(18px,2vw,22px);margin:.2em 0 .4em;color:var(--accent)}
+p,li{font-size:clamp(16px,1.9vw,22px);line-height:1.65}
+ul{padding-left:1.2em;margin:.3em 0}
+li{margin:.25em 0}
+.kicker{color:var(--accent);font-weight:700;letter-spacing:.12em;font-size:clamp(13px,1.4vw,16px)}
+.sub{color:var(--muted);font-size:clamp(18px,2.2vw,26px)}
+.grid{display:grid;gap:clamp(12px,1.6vw,22px);grid-template-columns:repeat(auto-fit,minmax(240px,1fr));margin-top:.4em}
+.card{background:var(--card);border:1px solid var(--line);border-radius:18px;padding:clamp(14px,1.8vw,24px);box-shadow:var(--shadow)}
+.card p,.card li{font-size:clamp(15px,1.6vw,19px)}
+.emoji{font-size:1.3em}
+.big{font-size:clamp(40px,6vw,72px);font-weight:800;color:var(--accent);line-height:1}
+.tag{display:inline-block;background:var(--accent-soft);color:var(--accent);border-radius:999px;padding:.1em .7em;font-size:.8em;font-weight:700;margin-right:.3em}
+.vs{display:grid;grid-template-columns:1fr auto 1fr;gap:14px;align-items:stretch;margin-top:.4em}
+.vs .mid{align-self:center;font-weight:800;color:var(--muted)}
+.note{margin-top:auto;padding-top:14px;color:var(--muted);font-size:clamp(12px,1.2vw,14px);border-top:1px dashed var(--line)}
+.note b{color:var(--ink)}
+.callout{border-left:5px solid var(--gold);background:var(--card);padding:10px 16px;border-radius:10px;margin:.6em 0;box-shadow:var(--shadow)}
+.callout.conflict{border-color:var(--accent)}
+.callout .lbl{font-weight:800;color:var(--gold);font-size:.85em}
+.callout.conflict .lbl{color:var(--accent)}
+table{border-collapse:collapse;width:100%;font-size:clamp(15px,1.6vw,19px);background:var(--card);border-radius:14px;overflow:hidden;box-shadow:var(--shadow)}
+th,td{padding:.55em .8em;border-bottom:1px solid var(--line);text-align:left;vertical-align:top}
+th{background:var(--accent-soft);color:var(--accent)}
+.cover{justify-content:center}
+.cover .plate{font-size:clamp(56px,10vw,120px)}
+.route{display:flex;flex-wrap:wrap;gap:10px;align-items:center;margin-top:.6em}
+.route span{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:.5em .9em;font-size:clamp(15px,1.8vw,21px);box-shadow:var(--shadow)}
+.route i{color:var(--muted);font-style:normal}
+.quiz .q{cursor:pointer}
+.quiz .a{display:none;margin-top:.5em;color:var(--green);font-weight:700}
+.quiz .q.open .a{display:block}
+.quiz .hint{color:var(--muted);font-size:.85em}
+.nav{position:fixed;left:0;right:0;bottom:0;display:flex;align-items:center;justify-content:space-between;
+  gap:12px;padding:10px clamp(12px,3vw,32px);background:color-mix(in srgb,var(--bg) 88%,transparent);backdrop-filter:blur(6px);border-top:1px solid var(--line)}
+.nav button{font:inherit;font-size:16px;border:1px solid var(--line);background:var(--card);color:var(--ink);border-radius:12px;padding:.45em 1em;cursor:pointer}
+.nav button:hover{border-color:var(--accent);color:var(--accent)}
+.count{color:var(--muted);font-variant-numeric:tabular-nums}
+.bar{position:fixed;top:0;left:0;height:4px;background:var(--accent);transition:width .3s}
+@media (max-width:640px){ .vs{grid-template-columns:1fr} .vs .mid{justify-self:center} }
+@media print{
+  .nav,.bar{display:none}
+  .slide{display:flex!important;position:relative;page-break-after:always;min-height:100vh}
+}
+</style>
+</head>
+<body>
+<div class="bar" id="bar"></div>
+<main class="deck" id="deck">
+
+<!-- 1 封面 -->
+<section class="slide cover">
+  <div class="plate">🍜🧋🍢</div>
+  <div class="kicker">TAIWANESE STREET FOOD 101</div>
+  <h1>台灣小吃入門</h1>
+  <p class="sub">從夜市開始，認識臺灣的味道</p>
+  <p class="sub" style="font-size:16px">按 → 或空白鍵翻頁　｜　內容全部來自本專案的 LLM Wiki</p>
+</section>
+
+<!-- 2 路線 -->
+<section class="slide">
+  <div class="kicker">今天的路線</div>
+  <h2>🗺️ 5 站帶你入門</h2>
+  <div class="route">
+    <span>① 夜市：小吃的舞台</span><i>→</i>
+    <span>② 小吃從哪裡來？</span><i>→</i>
+    <span>③ 12 道代表小吃</span><i>→</i>
+    <span>④ 怎麼看起源故事</span><i>→</i>
+    <span>⑤ 小測驗 ＋ 點餐小抄</span>
+  </div>
+  <div class="callout" style="margin-top:1.2em">
+    <div class="lbl">閱讀小提示</div>
+    <p style="margin:.2em 0">看到 <span class="tag">一說</span> 代表資料來源之間說法不同，我們把不同說法都列出來，不替你選邊。</p>
+  </div>
+  <div class="note">依據：<b>wiki/syntheses/簡報大綱-台灣小吃入門</b></div>
+</section>
+
+<!-- 3 夜市 -->
+<section class="slide">
+  <div class="kicker">第 ① 站</div>
+  <h2>🏮 夜市：小吃的舞台</h2>
+  <div class="grid">
+    <div class="card"><div class="big">300+</div><p>全臺大約有 300 多個夜市</p></div>
+    <div class="card"><div class="big">1908</div><p>已有旗津天后宮廟前夜市的紀錄，營業到半夜 12 點——夜市有 100 多年歷史</p></div>
+    <div class="card"><div class="big">4 種</div><p>觀光夜市、街邊（商圈）型、商場型、流動型（以前叫「商展」）</p></div>
+  </div>
+  <ul style="margin-top:1em">
+    <li>不只吃：還有撈金魚、套圈圈、夾娃娃機等遊戲</li>
+    <li>很多小吃設計成<b>可以拿在手上邊走邊吃</b></li>
+  </ul>
+  <div class="note">依據：<b>[[夜市文化]]</b> ← src-維基百科-台灣夜市、src-觀光署-小吃飲品</div>
+</section>
+
+<!-- 4 外來在地化 -->
+<section class="slide">
+  <div class="kicker">第 ② 站</div>
+  <h2>✈️ 小吃從哪裡來？</h2>
+  <p>很多臺灣小吃是<b>不同時代的移民帶來家鄉味</b>，再用臺灣的食材和口味改良。</p>
+  <table>
+    <tr><th>從哪裡來</th><th>例子</th></tr>
+    <tr><td>上海</td><td>生煎包、小籠包（臺灣版加了絲瓜、瓠仔）</td></tr>
+    <tr><td>福建</td><td>蚵仔煎、胡椒餅</td></tr>
+    <tr><td>日本／日治時期</td><td>車輪餅、刨冰</td></tr>
+    <tr><td>1949 年後的外省移民</td><td>紅燒牛肉麵</td></tr>
+    <tr><td>美國</td><td>鹽酥雞（靈感來自美式炸雞）</td></tr>
+  </table>
+  <p style="margin-top:.6em">🔁 還會「再出口」：臺灣牛肉麵跟著移民到加州，又以「加州牛肉麵」回到中國大陸。</p>
+  <div class="note">依據：<b>[[外來飲食的在地化]]</b> ← src-觀光署-小吃飲品、src-維基百科-牛肉麵</div>
+</section>
+
+<!-- 5 滷肉飯 -->
+<section class="slide">
+  <div class="kicker">第 ③ 站｜飯麵類</div>
+  <h2>🍚 滷肉飯</h2>
+  <div class="grid">
+    <div class="card"><h3>是什麼</h3><p>白飯 ＋ 切碎的滷豬肉 ＋ 滷汁</p></div>
+    <div class="card"><h3>為什麼切碎？</h3><p>物資缺乏的年代，肉很珍貴；切成細丁，全家人都分得到。</p></div>
+    <div class="card"><h3>「魯」還是「滷」？</h3><p>正確是「滷」。「魯」只是同音字，不是指山東——連《米其林指南》都曾搞錯。</p></div>
+  </div>
+  <div class="callout conflict">
+    <div class="lbl">⚠ 南北不一樣</div>
+    <p style="margin:.2em 0">北部、中部的「滷肉飯」＝碎肉（肉臊飯）；在<b>南部</b>點「滷肉飯」，可能拿到一大塊五花肉（炕肉飯）！</p>
+  </div>
+  <div class="note">依據：<b>[[滷肉飯]]</b> ← src-觀光署-小吃飲品、src-維基百科-肉臊飯</div>
+</section>
+
+<!-- 6 牛肉麵 -->
+<section class="slide">
+  <div class="kicker">第 ③ 站｜飯麵類</div>
+  <h2>🐂 牛肉麵</h2>
+  <ul>
+    <li>臺灣早期是農業社會，牛幫忙耕田，很多人<b>不吃牛</b></li>
+    <li>1949 年後來臺的<b>外省移民</b>，創造了臺灣的紅燒牛肉麵</li>
+    <li>兩種口味：<span class="tag">紅燒</span>豆瓣醬燉的濃湯　<span class="tag">清燉</span>清澈的湯</li>
+  </ul>
+  <div class="callout conflict">
+    <div class="lbl">⚠ 川味紅燒牛肉麵怎麼來的？三種說法</div>
+    <ul style="margin:.2em 0">
+      <li><span class="tag">一說</span>外省老兵為了謀生而發明</li>
+      <li><span class="tag">一說</span>眷村用美援麵粉＋美援牛肉罐頭，四川人再加入豆瓣醬</li>
+      <li><span class="tag">一說</span>高雄岡山空軍眷村的四川老兵，改良成都菜「小碗紅湯牛肉」</li>
+    </ul>
+  </div>
+  <div class="note">依據：<b>[[牛肉麵]]</b> ← src-觀光署-小吃飲品、src-維基百科-牛肉麵</div>
+</section>
+
+<!-- 7 擔仔麵 -->
+<section class="slide">
+  <div class="kicker">第 ③ 站｜飯麵類</div>
+  <h2>🎋 擔仔麵</h2>
+  <div class="vs">
+    <div class="card"><h3>「擔」</h3><p>小販用扁擔挑著麵攤，沿街叫賣。</p></div>
+    <div class="mid">＋</div>
+    <div class="card"><h3>「度小月」</h3><p>臺南沿海漁民在不能出海捕魚的淡季，挑擔賣麵貼補家用。</p></div>
+  </div>
+  <ul style="margin-top:1em">
+    <li>臺南的代表小吃（臺南也以棺材板聞名）</li>
+    <li>攤上的麵叫「切仔麵」：把麵放進滾水裡「切」一下（臺語）</li>
+  </ul>
+  <div class="note">依據：<b>[[擔仔麵]]</b> ← src-觀光署-小吃飲品、src-維基百科-台灣夜市</div>
+</section>
+
+<!-- 8 夜市人氣王 -->
+<section class="slide">
+  <div class="kicker">第 ③ 站｜點心／炸物</div>
+  <h2>🏆 夜市人氣王</h2>
+  <div class="grid">
+    <div class="card"><span class="tag">2017 票選 No.1</span><h3>臭豆腐</h3><p>發酵豆腐，聞起來臭。新手先吃<b>炸的</b>，配酸甜泡菜；敢挑戰再吃麻辣「臭臭鍋」。</p></div>
+    <div class="card"><span class="tag">2017 票選 No.2</span><h3>蚵仔煎</h3><p>番薯粉漿包蚵仔煎成餅，Q 黏口感來自番薯粉。源自福建，蚵仔產在臺南、嘉義、屏東沿海。</p></div>
+    <div class="card"><span class="tag">自選現炸</span><h3>鹽酥雞</h3><p>小塊雞肉裹粉油炸撒胡椒鹽。推車上還能挑海鮮、蔬菜一起炸。</p></div>
+  </div>
+  <p style="margin-top:.6em;color:var(--muted)">＊票選是「2017 台北夜市打牙祭」網路投票，代表人氣，不代表品質。</p>
+  <div class="note">依據：<b>[[臭豆腐]]、[[蚵仔煎]]、[[鹽酥雞]]、[[夜市文化]]</b></div>
+</section>
+
+<!-- 9 更多鹹點 -->
+<section class="slide">
+  <div class="kicker">第 ③ 站｜點心與湯品</div>
+  <h2>🥟 更多鹹點</h2>
+  <div class="grid">
+    <div class="card"><h3>肉圓</h3><p>半透明 Q 彈的外皮是<b>甘薯粉</b>做的，包肉餡。相傳來自彰化北斗水災時的救急糧食。</p></div>
+    <div class="card"><h3>刈包（虎咬豬）</h3><p>對折的麵皮像老虎嘴，咬著豬五花肉。攤子常一起賣<b>四神湯</b>。</p></div>
+    <div class="card"><h3>蚵仔麵線</h3><p>蚵仔（小牡蠣）＋細麵線的稠湯，加點烏醋、蒜泥。不敢吃蚵仔？點<b>大腸麵線</b>。</p></div>
+  </div>
+  <div class="note">依據：<b>[[肉圓]]、[[刈包]]、[[蚵仔麵線]]</b> ← src-觀光署-小吃飲品</div>
+</section>
+
+<!-- 10 甜品 -->
+<section class="slide">
+  <div class="kicker">第 ③ 站｜甜品冰品</div>
+  <h2>🍧 甜品冰品</h2>
+  <div class="vs">
+    <div class="card"><h3>豆花</h3><p>黃豆漿凝結而成，<b>比豆腐更嫩</b>，又叫豆腐腦。冬天吃熱的、夏天吃冰的，配料自己選。</p></div>
+    <div class="mid">＆</div>
+    <div class="card"><h3>芒果冰</h3><p>刨冰＋現切愛文芒果＋煉乳。<b>6–8 月</b>芒果盛產時最好吃。臺灣刨冰的源頭是日治時期的「清冰」。</p></div>
+  </div>
+  <div class="note">依據：<b>[[豆花]]、[[芒果冰]]</b> ← src-觀光署-小吃飲品</div>
+</section>
+
+<!-- 11 珍奶 -->
+<section class="slide">
+  <div class="kicker">第 ③ 站｜飲料</div>
+  <h2>🧋 珍珠奶茶</h2>
+  <ul>
+    <li>「珍珠」是<b>木薯粉做的粉圓</b>，不是真的珍珠</li>
+    <li>1980 年代在臺灣誕生，從泡沫紅茶店文化發展出來，現在紅遍全世界</li>
+    <li>2020 年還有了自己的表情符號 🧋</li>
+    <li>一杯 500cc 約 700 大卡 ≈ 一個排骨便當</li>
+  </ul>
+  <div class="callout conflict">
+    <div class="lbl">⚠ 誰發明的？至今沒有答案</div>
+    <div class="vs" style="margin-top:.3em">
+      <div><b>臺中 春水堂</b><br>1985 年把粉圓加進奶茶，1987 年上市</div>
+      <div class="mid">VS</div>
+      <div><b>臺南 翰林茶館</b><br>1986 年看到市場的白粉圓得到靈感</div>
+    </div>
+    <p style="margin:.4em 0 0">雙方打了約十年官司，法院只判定珍奶不是專利商品，<b>沒有認定誰是始祖</b>。</p>
+  </div>
+  <div class="note">依據：<b>[[珍珠奶茶]]</b> ← src-維基百科-珍珠奶茶、src-觀光署-小吃飲品</div>
+</section>
+
+<!-- 12 起源傳說 -->
+<section class="slide">
+  <div class="kicker">第 ④ 站</div>
+  <h2>🔍 怎麼看「起源故事」？</h2>
+  <div class="grid">
+    <div class="card"><h3>1. 「相傳」＝故事</h3><p>豆花（漢朝劉安）、潤餅（明代蔡復一夫人）、鼎邊銼（鄭成功）……很好記，但不一定是史實。</p></div>
+    <div class="card"><h3>2. 有紀錄也可能吵不完</h3><p>珍珠奶茶年代很近、有人名、有判決，起源仍有兩種說法。</p></div>
+    <div class="card"><h3>3. 名字會誤導</h3><p>「魯肉飯」的「魯」不是山東，只是同音字。</p></div>
+  </div>
+  <p style="margin-top:.8em">👉 介紹小吃時，可以說「<b>傳說是……</b>」「<b>有一說是……</b>」，就不會講錯。</p>
+  <div class="note">依據：<b>[[起源傳說]]</b> ← src-觀光署-小吃飲品、src-維基百科-珍珠奶茶、src-維基百科-肉臊飯</div>
+</section>
+
+<!-- 13 小測驗 -->
+<section class="slide quiz">
+  <div class="kicker">第 ⑤ 站</div>
+  <h2>📝 小測驗 <span class="hint">（點題目看答案）</span></h2>
+  <div class="grid">
+    <div class="card q"><h3>Q1</h3><p>在臺灣南部點「滷肉飯」，可能會拿到什麼？</p><div class="a">一大塊滷五花肉（炕肉飯）。北部的滷肉飯才是碎肉。</div></div>
+    <div class="card q"><h3>Q2</h3><p>為什麼臺灣早期很多人不吃牛肉？</p><div class="a">牛是幫忙耕田的夥伴，大家感念牛的辛勞。</div></div>
+    <div class="card q"><h3>Q3</h3><p>珍珠奶茶的發明人是誰？</p><div class="a">沒有定論！春水堂和翰林茶館都說是自己，法院沒有認定始祖。</div></div>
+  </div>
+  <div class="note">依據：<b>[[滷肉飯]]、[[牛肉麵]]、[[珍珠奶茶]]</b></div>
+</section>
+
+<!-- 14 小抄 -->
+<section class="slide">
+  <div class="kicker">第 ⑤ 站</div>
+  <h2>🧾 夜市新手點餐小抄</h2>
+  <table>
+    <tr><th>想要</th><th>點這個</th><th>小提醒</th></tr>
+    <tr><td>吃飽</td><td>滷肉飯、牛肉麵</td><td>南部的滷肉飯可能是大塊肉</td></tr>
+    <tr><td>夜市經典</td><td>蚵仔煎、炸臭豆腐</td><td>臭豆腐先從炸的開始</td></tr>
+    <tr><td>邊走邊吃</td><td>鹽酥雞</td><td>可以自己挑食材一起炸</td></tr>
+    <tr><td>甜的</td><td>豆花、芒果冰</td><td>芒果冰要夏天吃</td></tr>
+    <tr><td>喝的</td><td>珍珠奶茶</td><td>熱量很高，一杯就像一個便當</td></tr>
+  </table>
+  <div class="note">依據：整理自各小吃頁的「給初學者的重點」（組合方式屬推論）</div>
+</section>
+
+<!-- 15 來源 -->
+<section class="slide">
+  <div class="kicker">資料來源</div>
+  <h2>📚 這份簡報從哪裡來？</h2>
+  <p>所有內容都來自本專案的 LLM Wiki（wiki/），wiki 再引用 5 份原始資料（raw/）：</p>
+  <ol>
+    <li>交通部觀光署〈小吃飲品〉，臺灣觀光資訊網，擷取 2026-11-23</li>
+    <li>維基百科〈珍珠奶茶〉，版本 2026-11-03，CC BY-SA 4.0</li>
+    <li>維基百科〈牛肉麵〉，版本 2026-09-08，CC BY-SA 4.0</li>
+    <li>維基百科〈肉臊飯〉，版本 2026-06-12，CC BY-SA 4.0</li>
+    <li>維基百科〈台灣夜市〉，版本 2026-09-17，CC BY-SA 4.0</li>
+  </ol>
+  <p style="color:var(--muted)">各資料互相矛盾的地方，簡報中以 <span class="tag">一說</span> 或 ⚠ 標示。</p>
+  <div class="note">依據：<b>[[index]]</b></div>
+</section>
+
+</main>
+<nav class="nav">
+  <button id="prev" aria-label="上一張">← 上一張</button>
+  <span class="count" id="count"></span>
+  <button id="next" aria-label="下一張">下一張 →</button>
+</nav>
+<script>
+(function(){
+  var slides=[].slice.call(document.querySelectorAll('.slide'));
+  var i=0;
+  function show(n){
+    i=Math.max(0,Math.min(slides.length-1,n));
+    slides.forEach(function(s,k){s.classList.toggle('active',k===i)});
+    document.getElementById('count').textContent=(i+1)+' / '+slides.length;
+    document.getElementById('bar').style.width=((i+1)/slides.length*100)+'%';
+    if(location.hash!=='#'+(i+1)) history.replaceState(null,'','#'+(i+1));
+  }
+  document.getElementById('prev').onclick=function(){show(i-1)};
+  document.getElementById('next').onclick=function(){show(i+1)};
+  document.addEventListener('keydown',function(e){
+    if(['ArrowRight','PageDown',' ','Enter'].indexOf(e.key)>-1){e.preventDefault();show(i+1)}
+    if(['ArrowLeft','PageUp','Backspace'].indexOf(e.key)>-1){e.preventDefault();show(i-1)}
+    if(e.key==='Home')show(0); if(e.key==='End')show(slides.length-1);
+  });
+  var x0=null;
+  document.addEventListener('touchstart',function(e){x0=e.touches[0].clientX},{passive:true});
+  document.addEventListener('touchend',function(e){
+    if(x0===null)return; var dx=e.changedTouches[0].clientX-x0;
+    if(Math.abs(dx)>50) show(i+(dx<0?1:-1)); x0=null;
+  });
+  [].forEach.call(document.querySelectorAll('.quiz .q'),function(q){
+    q.addEventListener('click',function(){q.classList.toggle('open')});
+  });
+  var h=parseInt(location.hash.slice(1),10);
+  show(isNaN(h)?0:h-1);
+})();
+</script>
+</body>
+</html>
